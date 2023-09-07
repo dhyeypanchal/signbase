@@ -20,6 +20,7 @@ app.use("/",Char);
 
 app.get("/",(req,res)=>{
     console.log("hello from server");
+    res.send("Hello from server")
 })
 
 const port = process.env.PORT || 5000;
