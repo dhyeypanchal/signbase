@@ -19,7 +19,9 @@ app.use(express.json())
 app.use("/",Char);
 
 app.get("/",(req,res)=>{
-    console.log("hello from server");
+    res.status(200).json({
+        msg: "Hello From SignBase Server..."
+    })
 })
 
 const port = process.env.PORT || 5000;
