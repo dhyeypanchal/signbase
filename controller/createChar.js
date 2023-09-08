@@ -32,6 +32,7 @@ const createChar1 = async (req, res) => {
         if(req.file){
             var url = await uploadToCloudinary(req.file.path);
             if(url.message== "Fail"){
+                //in case of failure to cloudinary upload
                 return res.status(400).send({
                     msg: "Failed to Upload to the Cloudinary, please try again later..."
                 })
@@ -82,6 +83,7 @@ const createChar1 = async (req, res) => {
     }
 }
 
+//this function will upload pic to cludinary
 async function uploadToCloudinary(locaFilePath) {
 
     const a = await cloudinary.uploader.upload(locaFilePath)
