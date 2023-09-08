@@ -6,15 +6,13 @@ const connectDB = require("./config/db.js");
 const bodyparser = require("body-parser");
 const app = express();
 
-// cors are remaining to install
-
 //databse config
 connectDB();
 
-app.use(bodyparser.urlencoded({extended:false}))
 app.use(bodyparser.json())
+app.use(bodyparser.urlencoded({extended:true}))
 
-app.use(express.json())
+// app.use(express.json())
 
 app.use("/",Char);
 

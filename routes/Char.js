@@ -4,7 +4,6 @@ const getCharactor = require("../controller/getCharactors");
 const getAlphabets = require("../controller/getAlphabets");
 const getNumber = require("../controller/getNumbers");
 const updateChar = require("../controller/updateCharImage");
-// const upload = require('../config/multer');
 const router = express.Router();
 const fs = require('fs');
 const multer = require("multer");
