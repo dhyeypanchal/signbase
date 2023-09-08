@@ -1,12 +1,18 @@
 const Char = require("../models/Char");
-const cloudinary = require('../config/cloudinary');
+const cloudinary = require('cloudinary').v2;
 const fs = require("fs")
 const path1 = require('path');
 
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET
+});
 
-const createChar = async (req, res) => {
+const createChar1 = async (req, res) => {
     try {
         const { char } = req.body;
+        console.log(req.body);
         if (char.length != 1) {
             return res.status(400).send({
                 message: "Please enter only 1 char",
@@ -21,33 +27,23 @@ const createChar = async (req, res) => {
                 success: false
             })
         }
-        const uploader = async (path) => await cloudinary.uploads(path)
-        const file = req.file;
-        const { path } = file;
-        const newPath = await uploader(path)
-        const url = newPath.url;
-        const siblingFolderPath = path1.join(__dirname, '../Temp'); // Specify the path to the sibling folder
 
-        fs.readdir(siblingFolderPath, (err, files) => {
-            if (err) {
-                console.error('Error reading the sibling folder:', err);
-                return;
+        console.log(req.file);
+        if(req.file){
+            var url = await uploadToCloudinary(req.file.path);
+            if(url.message== "Fail"){
+                //in case of failure to cloudinary upload
+                return res.status(400).send({
+                    msg: "Failed to Upload to the Cloudinary, please try again later..."
+                })
             }
-
-            // Iterate through the files in the sibling folder
-            files.forEach((fileName) => {
-                const filePath = path1.join(siblingFolderPath, fileName);
-
-                // Delete each file
-                fs.unlink(filePath, (unlinkErr) => {
-                    if (unlinkErr) {
-                        console.error(`Error deleting ${fileName}:`, unlinkErr);
-                    } else {
-                        console.log(`Deleted ${fileName}`);
-                    }
-                });
-            });
-        });
+        }
+        else{
+            return res.status(400).send({
+                msg: "Please Provide Image File First..."
+            })
+        }
+        
 
         let isalpha = 0;
         const asciiValue = char.charCodeAt(0); // this is used for findout ascii value for the charactor
@@ -55,7 +51,7 @@ const createChar = async (req, res) => {
             isalpha = 1;
             const result = await Char.create({
                 char: char,
-                image: url,
+                image: url.url,
                 isAlpha: isalpha
             })
             return res.status(200).send({
@@ -67,7 +63,7 @@ const createChar = async (req, res) => {
         else {
             const result = await Char.create({
                 char: char,
-                image: url,
+                image: url.url,
                 isAlpha: isalpha
             })
             return res.status(200).send({
@@ -85,9 +81,26 @@ const createChar = async (req, res) => {
             success: false
         });
     }
-};
+}
 
-module.exports = createChar;
+//this function will upload pic to cludinary
+async function uploadToCloudinary(locaFilePath) {
 
+    const a = await cloudinary.uploader.upload(locaFilePath)
 
-// module.exports = createChar;
+    if(a){
+        fs.unlinkSync(locaFilePath);
+        return {
+            message: "Success",
+            url: a.url
+        }
+    }
+    else{
+        fs.unlinkSync(locaFilePath);
+        return { 
+            message: "Fail"
+        };
+    }
+}
+
+module.exports = {createChar1};

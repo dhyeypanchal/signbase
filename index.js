@@ -6,21 +6,20 @@ const connectDB = require("./config/db.js");
 const bodyparser = require("body-parser");
 const app = express();
 
-// cors are remaining to install
-
 //databse config
 connectDB();
 
-app.use(bodyparser.urlencoded({extended:false}))
 app.use(bodyparser.json())
+app.use(bodyparser.urlencoded({extended:true}))
 
-app.use(express.json())
+// app.use(express.json())
 
 app.use("/",Char);
 
 app.get("/",(req,res)=>{
-    console.log("hello from server");
-    res.send("Hello from server")
+    res.status(200).json({
+        msg: "Hello From SignBase Server..."
+    })
 })
 
 const port = process.env.PORT || 5000;
