@@ -4,6 +4,7 @@ const getCharactor = require("../controller/getCharactors");
 const getAlphabets = require("../controller/getAlphabets");
 const getNumber = require("../controller/getNumbers");
 const updateChar = require("../controller/updateCharImage");
+const getParticularCharacters = require("../controller/getParticularChar");
 const router = express.Router();
 const fs = require('fs');
 const multer = require("multer");
@@ -37,5 +38,8 @@ router.get("/get-all-num",getNumber)
 
 // for updating the charactor
 router.put("/update-char",updateChar)
+
+//for getting particular characters
+router.get("/get-particular-char", getParticularCharacters)
 
 module.exports = router;
