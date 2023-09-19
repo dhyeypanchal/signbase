@@ -5,12 +5,14 @@ const Char = require("./routes/Char.js");
 const connectDB = require("./config/db.js");
 const bodyparser = require("body-parser");
 const app = express();
+const cors = require("cors")
 
 //databse config
 connectDB();
 
 app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({extended:true}))
+app.use(cors())
 
 // app.use(express.json())
 
