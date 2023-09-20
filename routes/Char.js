@@ -40,6 +40,6 @@ router.get("/get-all-num",getNumber)
 router.put("/update-char",updateChar)
 
 //for getting particular characters
-router.get("/get-particular-char", getParticularCharacters)
+router.post("/get-particular-char", getParticularCharacters)
 
 module.exports = router;
